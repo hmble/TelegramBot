@@ -9,7 +9,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	_ "github.com/joho/godotenv/autoload"
@@ -42,13 +41,22 @@ func main() {
 }
 
 func startBot() {
+	var (
+ 				port      = os.Getenv("PORT")
+        publicURL = os.Getenv("PUBLIC_URL")
+
+	)
+	 webhook := &tb.Webhook{
+        Listen:   ":" + port,
+        Endpoint: &tb.WebhookEndpoint{PublicURL: publicURL},
+    }
 	mg := &MyGroup{Name: "PersonalBot", ChatID: os.Getenv("GROUP_CHAT_ID")}
 	b, err := tb.NewBot(tb.Settings{
 		// You can also set custom API URL.
 		// If field is empty it equals to "https://api.telegram.org".
 	
 		Token:  os.Getenv("BOT_TOKEN"),
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
+		Poller: webhook,
 	})
 	
 	if err != nil {
