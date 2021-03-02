@@ -21,7 +21,7 @@ const (
 	WordTemplate = "./word.tmpl"
 )
 var t *template.Template
-
+var startTemplate *template.Template
 func init() {
 	 t = template.Must(template.ParseFiles(WordTemplate))
 }
@@ -37,8 +37,8 @@ func (mg MyGroup) Recipient() string{
 }
 func main() {
 
-	// startBot()
-	fmt.Println(getDefinition("whim"))
+	startBot()
+	// fmt.Println(getDefinition("whim"))
 }
 
 func startBot() {
@@ -68,6 +68,24 @@ func startBot() {
 		b.Send(m.Chat, fmt.Sprintf("Hello %s", m.Sender.FirstName))
 	})
 	
+	b.Handle("/start", func(m *tb.Message) {
+		b.Send(m.Chat, fmt.Sprintf(
+			`Hello %s
+			I am SamPersonalBot
+			Use following commands to get help from me
+			/help		To get help from me
+			/w			To get word definition
+			`, m.Sender.FirstName))
+	})
+	b.Handle("/help", func(m *tb.Message) {
+		b.Send(m.Chat, fmt.Sprintf(
+			`Hello %s
+			I am SamPersonalBot
+			Use following commands to get help from me
+			/help		To get help from me ( This Message )
+			/w			To get word definition
+			`, m.Sender.FirstName))
+	})
 	b.Handle("/w", func(m *tb.Message) {
 		if strconv.Itoa(int(m.Chat.ID)) != mg.ChatID {
 			b.Send(m.Chat, "You are not allowed")
