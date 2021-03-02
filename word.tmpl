@@ -1,0 +1,15 @@
+{{ .Word }} means
+{{ range $index, $val := .Meaning }}
+{{- if eq $index 0}}
+{{$val}}
+
+{{- else if eq $index 1}}
+More Definitions
+
+{{$val}}
+{{- else}}
+{{$val}}
+{{- end}}
+{{ end }}
+For More Info visit
+https://vocabulary.com/dicitionary/{{ .Word }}
